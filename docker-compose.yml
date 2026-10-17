@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+
+  spark-master:
+    image: apache/spark:3.5.1
+    container_name: iceberg-spark-master
+    hostname: spark-master
+
+    command: >
+      bash -c "
+      /opt/spark/sbin/start-master.sh &&
+      tail -f /opt/spark/logs/spark--org.apache.spark.deploy.master*.out
+      "
+
+    ports:
+      - "8080:8080"
+      - "7077:7077"
+
+    volumes:
+      - ./apps:/opt/spark-apps
+      - ./data:/opt/spark-data
+      - ./iceberg-warehouse:/opt/iceberg/warehouse
+      - ./jars:/opt/iceberg-jars
+
+
+  spark-worker:
+    image: apache/spark:3.5.1
+    container_name: iceberg-spark-worker
+    hostname: spark-worker
+
+    command: >
+      bash -c "
+      /opt/spark/sbin/start-worker.sh
+      spark://spark-master:7077
+      --cores 2
+      --memory 2g &&
+      tail -f /opt/spark/logs/spark--org.apache.spark.deploy.worker*.out
+      "
+
+    ports:
+      - "8081:8081"
+      - "4040:4040"
+
+    depends_on:
+      - spark-master
+
+    volumes:
+      - ./apps:/opt/spark-apps
+      - ./data:/opt/spark-data
+      - ./iceberg-warehouse:/opt/iceberg/warehouse
+      - ./jars:/opt/iceberg-jars
