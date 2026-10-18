@@ -63,7 +63,11 @@ The goal is not simply to move a CSV through three folders. It is to demonstrate
 
 ## 🏗️ Problem & Architecture
 
-The full flow is shown below. GitHub renders this Mermaid diagram directly in the README.
+The Architecture is shown below.
+
+<img width="1704" height="1083" alt="Blank diagram" src="https://github.com/user-attachments/assets/e5c01a08-e35c-4c85-ad48-b7c2164f1eab" />
+
+The full flow is shown below.
 
 ```mermaid
 flowchart TD
@@ -86,7 +90,6 @@ flowchart TD
     class E,F,G gold;
     class H history;
 ```
-
 ### 🔄 Pipeline Flow
 
 <details>
@@ -130,7 +133,6 @@ This project focuses on a practical set of Iceberg capabilities and shows how th
 | **Iceberg tables and catalog** | Store Bronze, Silver, and Gold as Iceberg tables through Spark's Iceberg catalog |
 | **Append commits** | Add incoming events to the Bronze table without losing repeated deliveries |
 | **`MERGE INTO` / upserts** | Update corrected observations and insert newly arriving observations into Silver |
-| **Partitioning** | Organize the current-state and daily-summary tables using monthly partitioning |
 | **Snapshot history** | Inspect committed table snapshots through Iceberg metadata tables |
 | **Metadata tables** | Query `.snapshots` to inspect snapshot IDs, operations, and commit history |
 | **Time travel** | Query a saved Silver snapshot to retrieve the pre-correction value |
